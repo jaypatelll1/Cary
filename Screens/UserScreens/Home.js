@@ -42,14 +42,15 @@ const Home = ({ navigation }) => {
           >
             <View style={styles.wheretocont}>
               <View style={styles.innercont1}>
-                <Icon name="search1" color="black" size={24} />
-                <Text style={{ fontSize: 20, fontWeight: "500" }}>Where to?</Text>
+                <Icon name="search1" Color="black" size={24} />
+                <Text style={{ fontSize: 20, fontWeight: "400", color:"black" }}>Where to?</Text>
               </View>
               <View>
                 <View style={styles.arrowcont}>
                   <Icon name="arrowright" color="black" size={24} />
                 </View>
               </View>
+              
             </View>
           </View>
 
@@ -59,8 +60,8 @@ const Home = ({ navigation }) => {
                 <Icon1 name="home" color="black" size={24} />
               </View>
               <View style={styles.textcont}>
-                <Text style={{ fontSize: 17, fontWeight: "bold" }}>Home</Text>
-                <Text>Cresent bay, Parel </Text>
+                <Text style={{ fontSize: 15, fontWeight: "bold" , color:"black"}}>Home</Text>
+                <Text style={{ fontSize: 15, color:"black"}}>Cresent bay, Parel </Text>
               </View>
             </View>
             <View style={styles.linecont}>
@@ -73,8 +74,8 @@ const Home = ({ navigation }) => {
               </View>
 
               <View style={styles.textcont}>
-                <Text style={{ fontSize: 17, fontWeight: "bold" }}>Work</Text>
-                <Text>Inorbit complex, Malad</Text>
+                <Text style={{ fontSize: 15, fontWeight: "bold" ,color:"black"}}>Work</Text>
+                <Text style={{ fontSize: 15, color:"black"}}>Inorbit complex, Malad</Text>
               </View>
             </View>
           </View>
@@ -82,7 +83,7 @@ const Home = ({ navigation }) => {
 
         <View style={styles.thirdcont}>
           <View style={styles.textcont2}>
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>Suggestions</Text>
+            <Text style={{ fontSize: 20, fontWeight: "bold", color:"black"}}>Suggestions</Text>
           </View>
           <View style={styles.ScrollViewv}>
             <ScrollView horizontal>
@@ -95,8 +96,8 @@ const Home = ({ navigation }) => {
             </ScrollView>
           </View>
           <View style={styles.textcont1}>
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-              {" "}
+            <Text style={{ fontSize: 20, fontWeight: "bold",color:"black" }}>
+           
               Explore and plan rides
             </Text>
           </View>
