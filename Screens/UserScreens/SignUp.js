@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import axios from 'axios';
-import { useNavigation } from "@react-navigation/native";
 export default function SignUp({navigation}) {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
@@ -24,6 +23,7 @@ export default function SignUp({navigation}) {
       name: fullName,
       email: email,
       phone: phone,
+      role: 'passenger',
       password: password,
     };
     await axios
@@ -34,6 +34,7 @@ export default function SignUp({navigation}) {
         setPhone('');
         setEmail('');
         setPassword('');
+        navigation.navigate('Login');
       })
       .catch(err => {
         console.log(err);
@@ -156,6 +157,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#F3F3F3',
+    color: '#000000',
     borderRadius: 5,
     paddingHorizontal: 15,
     paddingVertical: 10,
