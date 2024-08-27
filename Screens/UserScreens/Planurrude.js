@@ -54,7 +54,7 @@ const Planurride = () => {
               console.log(data, details);
             }}
             query={{
-              key: 'AIzaSyCpiYEIAZTEBo28KJ6s-QdNK6SE8KrPa24',
+              key: '',
               language: 'en',
             }}
             styles={{
