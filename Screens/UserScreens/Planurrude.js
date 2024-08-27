@@ -3,19 +3,19 @@ import {
   Text,
   View,
   TouchableOpacity,
-  TextInput,
   Image,
 } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 const Planurride = () => {
   return (
     <View>
       {/* Top Bar */}
       <View style={styles.Topbar}>
-        <View style={{flexDirection: 'row', padding: 20}}>
+        <View style={{ flexDirection: 'row', padding: 20 }}>
           <View>
             <TouchableOpacity onPress={() => {}}>
               <Icon name="arrowleft" color="black" size={35} />
@@ -27,47 +27,88 @@ const Planurride = () => {
         </View>
         <View style={styles.toggleButtons}>
           <TouchableOpacity style={styles.toggleButton}>
-          <Icon name="clockcircleo" color="black" size={20} />
-
+            <Icon name="clockcircleo" color="black" size={20} />
             <Text style={styles.toggleText}>Pickup now</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.toggleButton}>
-          <Icon name="user" color="black" size={20} />
+            <Icon name="user" color="black" size={20} />
             <Text style={styles.toggleText}>For me</Text>
           </TouchableOpacity>
         </View>
       </View>
-
-      {/* Toggle Buttons for Pickup/For me */}
 
       {/* Location Input Fields */}
       <View style={styles.locationInputContainer}>
         <View style={styles.locationField}>
           <Image
             source={require('../../assets/Planurride/planurrude-1.png')}
-            style={{width: 15, height: 15, marginLeft: 10}}
+            style={{ width: 15, height: 15, marginLeft: 10 }}
           />
-          <TextInput
-            style={styles.locationInput}
+          <GooglePlacesAutocomplete
             placeholder="Current location"
-            placeholderTextColor="#ADADAD"
+            placeholderTextColor="gray"  // Adjusted placeholder text color
+            minLength={2}
+            returnKeyType={'search'}
+            fetchDetails={true}
+            onPress={(data, details = null) => {
+              console.log(data, details);
+            }}
+            query={{
+              key: 'AIzaSyCpiYEIAZTEBo28KJ6s-QdNK6SE8KrPa24',
+              language: 'en',
+            }}
+            styles={{
+              textInput: {
+                height: 45,
+                backgroundColor: 'rgba(52, 52, 52, 0.0)',
+                fontSize: 16,
+                color: 'black', 
+                marginLeft: 10,
+                flex: 1,
+              },
+              description: {
+                color: 'black', 
+              },
+            }}
           />
         </View>
 
         <View style={styles.locationField}>
           <Image
             source={require('../../assets/Planurride/planurrude-2.png')}
-            style={{width: 15, height: 15, marginLeft: 10}}
+            style={{ width: 15, height: 15, marginLeft: 10 }}
           />
-          <TextInput
-            style={styles.locationInput}
+          <GooglePlacesAutocomplete
             placeholder="Where to?"
-            placeholderTextColor="#ADADAD"
+            placeholderTextColor="#000000"  
+            minLength={2}
+            returnKeyType={'search'}
+            fetchDetails={true}
+            onPress={(data, details = null) => {
+              console.log(data, details);
+            }}
+            query={{
+              key: 'YOUR_GOOGLE_API_KEY',
+              language: 'en',
+            }}
+            styles={{
+              textInput: {
+                height: 45,
+                backgroundColor: 'rgba(52, 52, 52, 0.0)',
+                fontSize: 16,
+                color: 'black', 
+                marginLeft: 10,
+                flex: 1,
+              },
+              description: {
+                color: 'black', 
+              },
+            }}
           />
         </View>
       </View>
 
-      {/* Suggested Locations */}
+    
       <View style={styles.suggestions}>
         <View style={styles.suggestionItem}>
           <MaterialIcons name="home" size={25} color="black" />
@@ -120,9 +161,7 @@ const styles = StyleSheet.create({
     width: 120,
     backgroundColor: '#CBCBCB',
     borderRadius: 20,
-    marginLeft  : '5%',
-    
-    
+    marginLeft: '5%',
   },
   toggleText: {
     fontSize: 16,
@@ -139,12 +178,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
   },
-  locationInput: {
-    marginLeft: 10,
-    fontSize: 14,
-    flex: 1,
-    height: 45,
-  },
   suggestions: {
     padding: 10,
   },
@@ -156,6 +189,6 @@ const styles = StyleSheet.create({
   suggestionText: {
     marginLeft: 10,
     fontSize: 16,
-    color: '#000',
+    color: '#000', // Set the suggestion text color to black
   },
 });
