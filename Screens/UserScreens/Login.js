@@ -52,7 +52,6 @@ export default function Login({ navigation }) {
           <Image source={require('../../assets/login.png')} style={styles.Loginimg} />
         </View>
         <View style={styles.formContainer}>
-          <Text style={styles.loginText}>Login</Text>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}

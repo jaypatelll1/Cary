@@ -16,7 +16,7 @@ const Drawer = createDrawerNavigator();
 const StackNav = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="planurride" component={planurride} />
+      {/* <Stack.Screen name="planurride" component={planurride} /> */}
       <Stack.Screen name="Landing" component={Landing} />
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="UserHome" component={Home} />
