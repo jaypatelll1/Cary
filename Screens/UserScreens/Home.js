@@ -19,12 +19,13 @@ const images = [
 const Home = ({navigation}) => {
   const openDrawer = () => {
     navigation.dispatch(DrawerActions.openDrawer());
+    console.log('Drawer Opened');
   };
   return (
     <View style={styles.main}>
       <ScrollView>
         <View style={styles.topcont}>
-          <TouchableOpacity onPress={openDrawer}>
+          <TouchableOpacity onPressIn={openDrawer} style={{ zIndex: 1 }}>
             <Icon1
               name="menu"
               color="black"
@@ -149,6 +150,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 100,
     height: 50,
+    
   },
   secondcont: {
     width: '100%',

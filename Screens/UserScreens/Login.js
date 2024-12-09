@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
@@ -14,33 +14,39 @@ export default function Login({ navigation }) {
     navigation.navigate('SignUp');
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
     const user = { email, password };
 
-    axios.post('https://cary-backend.onrender.com/api/auth/login', user)
-      .then(response => {
-        const token = response.data.token;
-        const userrr = response.data.u;
+    try {
+      const response = await axios.post('https://cary-backend.onrender.com/api/auth/login', user);
+      const { token, u: userData } = response.data;
 
-        dispatch(setUser({
-          email: userrr.email,
-          name: userrr.name,
-          token: token,
-        }));
+      // Dispatch user data to Redux store
+      dispatch(setUser({
+        email: userData.email,
+        name: userData.name,
+        token,
+      }));
 
-        AsyncStorage.setItem('userId', userrr.userid);
-        AsyncStorage.setItem('email', userrr.email);
-        AsyncStorage.setItem('name', userrr.name);
-        AsyncStorage.setItem('authToken', token);
+      // Store user data in AsyncStorage
+      await AsyncStorage.setItem('userId', userData.userid);
+      await AsyncStorage.setItem('email', userData.email);
+      await AsyncStorage.setItem('name', userData.name);
+      await AsyncStorage.setItem('authToken', token);
 
-        console.log('Login Successful');
-        setEmail('');
-        setPassword('');
-        navigation.navigate("UserHome");
-      })
-      .catch(err => {
-        console.log(err);
-      });
+      Alert.alert('Success', 'Login successful');
+      setEmail('');
+      setPassword('');
+      navigation.navigate('UserHome');
+    } catch (error) {
+      console.error('Login Error:', error);
+      Alert.alert('Error', 'Login failed. Please check your credentials.');
+    }
   };
 
   return (
@@ -59,6 +65,8 @@ export default function Login({ navigation }) {
               placeholderTextColor="#A3A3A3"
               value={email}
               onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
             />
             <TextInput
               style={styles.input}

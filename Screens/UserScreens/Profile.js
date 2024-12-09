@@ -1,186 +1,141 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import Icon1 from "react-native-vector-icons/AntDesign";
 import Icon2 from "react-native-vector-icons/Feather";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/userSlice"; 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+
 export default function Profile() {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const { name, email } = useSelector((state) => state.user);
+
+  const handleLogout = async () => {
+    Alert.alert(
+      "Confirm Logout",
+      "Are you sure you want to log out?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Logout",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await AsyncStorage.removeItem("userToken"); // Clear token if stored in AsyncStorage
+              dispatch(logout()); // Reset user state in Redux
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "Login" }], // Navigate to Login screen
+              });
+            } catch (error) {
+              console.error("Error during logout:", error);
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
   return (
     <View style={styles.container}>
       <ScrollView>
         <View>
           <View style={styles.innercontainer}>
             <View style={styles.topcontainer}>
-              <Icon1
-                name="arrowleft"
-                color="black"
-                size={30}
-                style={styles.buttonIcon}
-              />
+              {/* Back Button */}
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Icon1 name="arrowleft" color="black" size={30} style={styles.buttonIcon} />
+              </TouchableOpacity>
               <Text style={styles.editProfileText}>Edit Profile</Text>
             </View>
+            {/* Profile Info */}
             <View style={styles.profileImageContainer}></View>
-            <Text style={styles.username}>Dev Pandhi</Text>
-            <Text style={styles.email}>devpandhi1@gmail.com</Text>
+            <Text style={styles.username}>{name}</Text>
+            <Text style={styles.email}>{email}</Text>
           </View>
 
+          {/* Saved Places Section */}
           <View style={styles.outercontainer}>
-            <Text
-              style={{ fontSize: 20, fontWeight: "bold", marginLeft: "7%" }}
-            >
-              Saved Places
-            </Text>
+            <Text style={styles.sectionTitle}>Saved Places</Text>
             <View>
-            <View style={styles.btnarrow}>
+              <View style={styles.btnarrow}>
                 <View style={styles.menuItemContainer}>
-                <Icon1
-                  name="home"
-                  color="black"
-                  size={20}
-                  style={styles.buttonIcon}
-                />
-                <Text style={styles.menuItem}>Enter Home Location</Text>
+                  <Icon2 name="home" color="black" size={20} style={styles.buttonIcon} />
+                  <Text style={styles.menuItem}>Enter Home Location</Text>
                 </View>
-                <View style={{ marginTop: 10 }}>
-                  <Icon1
-                    name="right"
-                    color="black"
-                    size={20}
-                    style={styles.buttonIcon}
-                  />
-                </View>
+                <Icon1 name="right" color="black" size={20} style={styles.arrowIcon} />
               </View>
               <View style={styles.line} />
               <View style={styles.btnarrow}>
                 <View style={styles.menuItemContainer}>
-                <Icon2
-                  name="briefcase"
-                  color="black"
-                  size={20}
-                  style={styles.buttonIcon}
-                />
-                <Text style={styles.menuItem}>Enter Work Location</Text>
+                  <Icon2 name="briefcase" color="black" size={20} style={styles.buttonIcon} />
+                  <Text style={styles.menuItem}>Enter Work Location</Text>
                 </View>
-                <View style={{ marginTop: 10 }}>
-                  <Icon1
-                    name="right"
-                    color="black"
-                    size={20}
-                    style={styles.buttonIcon}
-                  />
-                </View>
+                <Icon1 name="right" color="black" size={20} style={styles.arrowIcon} />
               </View>
               <View style={styles.line} />
               <View style={styles.btnarrow}>
                 <View style={styles.menuItemContainer}>
-                <Icon1
-                  name="plus"
-                  color="black"
-                  size={20}
-                  style={styles.buttonIcon}
-                />
-                <Text style={styles.menuItem}>Add a place</Text>
+                  <Icon1 name="plus" color="black" size={20} style={styles.buttonIcon} />
+                  <Text style={styles.menuItem}>Add a place</Text>
                 </View>
-                <View style={{ marginTop: 10 }}>
-                  <Icon1
-                    name="right"
-                    color="black"
-                    size={20}
-                    style={styles.buttonIcon}
-                  />
-                </View>
+                <Icon1 name="right" color="black" size={20} style={styles.arrowIcon} />
               </View>
             </View>
           </View>
+
+          {/* Others Section */}
           <View style={styles.outercontainer}>
-            <Text
-              style={{ fontSize: 20, fontWeight: "bold", marginLeft: "7%" }}
-            >
-              Others
-            </Text>
+            <Text style={styles.sectionTitle}>Others</Text>
             <View>
-            <View style={styles.btnarrow}>
+              <View style={styles.btnarrow}>
                 <View style={styles.menuItemContainer}>
-                <Icon2
-                  name="dollar-sign"
-                  color="black"
-                  size={20}
-                  style={styles.buttonIcon}
-                />
-                <Text style={styles.menuItem}>Payment methods</Text>
+                  <Icon2 name="dollar-sign" color="black" size={20} style={styles.buttonIcon} />
+                  <Text style={styles.menuItem}>Payment methods</Text>
                 </View>
-                <View style={{ marginTop: 10 }}>
-                  <Icon1
-                    name="right"
-                    color="black"
-                    size={20}
-                    style={styles.buttonIcon}
-                  />
-                </View>
+                <Icon1 name="right" color="black" size={20} style={styles.arrowIcon} />
               </View>
               <View style={styles.line} />
               <View style={styles.btnarrow}>
                 <View style={styles.menuItemContainer}>
-                <Icon1
-                  name="notification"
-                  color="black"
-                  size={20}
-                  style={styles.buttonIcon}
-                />
-                <Text style={styles.menuItem}>Notifications</Text>
+                  <Icon1 name="notification" color="black" size={20} style={styles.buttonIcon} />
+                  <Text style={styles.menuItem}>Notifications</Text>
                 </View>
-                <View style={{ marginTop: 10 }}>
-                  <Icon1
-                    name="right"
-                    color="black"
-                    size={20}
-                    style={styles.buttonIcon}
-                  />
-                </View>
+                <Icon1 name="right" color="black" size={20} style={styles.arrowIcon} />
               </View>
-              
               <View style={styles.line} />
               <View style={styles.btnarrow}>
                 <View style={styles.menuItemContainer}>
-                <Icon1
-                  name="customerservice"
-                  color="black"
-                  size={20}
-                  style={styles.buttonIcon}
-                />
-                <Text style={styles.menuItem}>Help Center</Text>
+                  <Icon1 name="customerservice" color="black" size={20} style={styles.buttonIcon} />
+                  <Text style={styles.menuItem}>Help Center</Text>
                 </View>
-                <View style={{ marginTop: 10 }}>
-                  <Icon1
-                    name="right"
-                    color="black"
-                    size={20}
-                    style={styles.buttonIcon}
-                  />
-                </View>
+                <Icon1 name="right" color="black" size={20} style={styles.arrowIcon} />
               </View>
             </View>
           </View>
+
+          {/* Logout and Delete Account Section */}
           <View style={styles.outercontainer}>
             <View>
               <View style={styles.btnarrow}>
-                <View style={styles.menuItemContainer}>
-                <Icon1
-                  name="logout"
-                  color="black"
-                  size={20}
-                  style={styles.buttonIcon}
-                />
+                <TouchableOpacity onPress={handleLogout} style={styles.menuItemContainer}>
+                  <Icon2 name="log-out" color="black" size={20} style={styles.buttonIcon} />
                   <Text style={styles.menuItem}>Logout</Text>
-                </View>
+                </TouchableOpacity>
               </View>
               <View style={styles.line} />
               <View style={styles.btnarrow}>
                 <View style={styles.menuItemContainer}>
-                  <Icon1
-                    name="deleteuser"
-                    color="black"
-                    size={20}
-                    style={styles.buttonIcon}
-                  />
+                  <Icon1 name="deleteuser" color="black" size={20} style={styles.buttonIcon} />
                   <Text style={styles.menuItem}>Delete Account</Text>
                 </View>
               </View>
@@ -211,12 +166,11 @@ const styles = StyleSheet.create({
     paddingBottom: "5%",
     paddingTop: "5%",
   },
-  backImage: {
-    marginLeft: "5%",
-    marginTop: "8%",
-    flex: 1,
-    width: 30,
-    height: 10,
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: "7%",
+    marginBottom: "5%",
   },
   editProfileText: {
     textAlign: "right",
@@ -233,26 +187,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
   },
-  profileImage: {
-    width: "50%",
-    height: "100%",
-  },
   username: {
-    color: "#000000", // or "#000000" as per your requirement
+    color: "#000000",
     fontWeight: "bold",
     fontSize: 25,
     textAlign: "center",
     marginTop: "3%",
   },
   email: {
-    color: "#8B8B8B", // or "#000000" as per your requirement
-    fontSize: 16,
+    color: "#8B8B8B",
+    fontSize: 12,
     textAlign: "center",
     marginTop: "1%",
   },
   line: {
     borderBottomColor: "#CBCBCB",
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.8,
     marginLeft: "7%",
     marginRight: "7%",
     marginTop: "3%",
@@ -263,28 +213,22 @@ const styles = StyleSheet.create({
     marginLeft: "7%",
     marginTop: "3%",
   },
-  arrowIcon: {
-    width: 20,
-    height: 20,
-    marginLeft: 10,
-  },
-  menuIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-  },
   menuItem: {
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: "600",
+    marginLeft: "5%",
   },
   topcontainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginLeft: "5%",
-    marginTop: 15,
   },
   buttonIcon: {
     marginRight: 5,
+  },
+  arrowIcon: {
+    marginTop: 10,
   },
   btnarrow: {
     flexDirection: "row",
