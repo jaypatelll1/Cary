@@ -1,39 +1,51 @@
-import { StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity } from "react-native";
-import Icon1 from "react-native-vector-icons/AntDesign";
-import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from "react-redux";
+import { updateUser } from "../../redux/userSlice";
 
 const EditProfile = () => {
   const navigation = useNavigation();
-  
-  // State for form inputs
+  const dispatch = useDispatch();
+
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
-  
-  // State to manage loading and success/error messages
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
-  // Get user token and ID (Assuming it's saved in AsyncStorage)
   const [userId, setUserId] = useState(null);
   const [authToken, setAuthToken] = useState(null);
 
   useEffect(() => {
-    // Fetch token and user ID from AsyncStorage
     const getUserData = async () => {
       const token = await AsyncStorage.getItem('authToken');
       const id = await AsyncStorage.getItem('userId');
+      const storedName = await AsyncStorage.getItem('name');
+      const storedEmail = await AsyncStorage.getItem('email');
+      const storedPhoneNumber = await AsyncStorage.getItem('phoneNumber');
+
       setAuthToken(token);
       setUserId(id);
+      if (storedName) setName(storedName);
+      if (storedEmail) setEmail(storedEmail);
+      if (storedPhoneNumber) setPhoneNumber(storedPhoneNumber);
     };
-    
     getUserData();
   }, []);
 
   const handleSubmit = async () => {
-    if (!name || !phoneNumber || !email) {
+    if (!name || !phoneNumber) {
       setMessage('Please fill in all fields');
       return;
     }
@@ -41,24 +53,28 @@ const EditProfile = () => {
     setLoading(true);
     setMessage('');
 
-    // Construct the data to send
-    const data = { name, phoneNumber, email };
+    const data = { name, phoneNumber };
 
     try {
-      // Make the PUT request to update user details
-      const response = await fetch(`https://cary-backend.onrender.com/api/user/${userId}/updateUser`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`,  // Sending token in headers
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `https://cary-backend.onrender.com/api/user/${userId}/updateUser`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       const result = await response.json();
 
       if (response.ok) {
         setMessage('Profile updated successfully!');
+        dispatch(updateUser({ name, phoneNumber }));
+        await AsyncStorage.setItem('name', name);
+        await AsyncStorage.setItem('phoneNumber', phoneNumber);  
       } else {
         setMessage(result.msg || 'Failed to update profile');
       }
@@ -72,64 +88,61 @@ const EditProfile = () => {
 
   return (
     <View style={styles.mainContainer}>
-      <ScrollView>
-        <View>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon1
-              name="arrowleft"
-              color="black"
-              size={30}
-              style={styles.buttonIcon}
-            />
-          </TouchableOpacity>
-          <View>
-            <Text style={styles.text}>Account Info</Text>
-          </View>
-          <View style={styles.profileImageContainer}>
-            <Icon1 name="user" color="lightgray" size={70} />
-          </View>
-          <View>
-            <Text style={styles.accountInfo}>Basic Details</Text>
-          </View>
-          <View>
-            <Text style={styles.formInput}>Name</Text>
-            <TextInput
-              placeholder="Dev Pandhi"
-              style={styles.textInput}
-              value={name}
-              onChangeText={setName}  // Update state with the input value
-            />
-            <View style={styles.line} />
-          </View>
-          <View>
-            <Text style={styles.formInput}>Phone Number</Text>
-            <TextInput
-              placeholder="7045999817"
-              style={styles.textInput}
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
-            />
-            <View style={styles.line} />
-          </View>
-          <View>
-            <Text style={styles.formInput}>Email</Text>
-            <TextInput
-              placeholder="devpandhi1@gmail.com"
-              style={styles.textInput}
-              value={email}
-              onChangeText={setEmail}
-            />
-            <View style={styles.line} />
-          </View>
-          {message ? <Text style={{ margin: 10, color: loading ? 'blue' : 'green' }}>{message}</Text> : null}
-          <TouchableOpacity
-            onPress={handleSubmit}
-            style={styles.button}
-            disabled={loading}
-          >
-            <Text style={styles.buttonText}>{loading ? 'Updating...' : 'Update Profile'}</Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrowleft" size={30} color="black" style={styles.backIcon} />
+        </TouchableOpacity>
+
+        <Text style={styles.headerText}>Account Info</Text>
+
+        <View style={styles.profileImageContainer}>
+          <Icon name="user" size={50} color="lightgray" />
+          <TouchableOpacity style={styles.editIcon}>
+            <Icon name="edit" size={15} color="black" />
           </TouchableOpacity>
         </View>
+
+        <Text style={styles.sectionHeader}>Basic Info</Text>
+
+        <Text style={styles.label}>Name</Text>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Enter your name"
+          value={name}
+          onChangeText={setName}
+        />
+
+        <Text style={styles.label}>Phone Number</Text>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Enter your phone number"
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
+        />
+
+        <Text style={styles.label}>Email</Text>
+        <TextInput
+          style={[styles.textInput, styles.readOnlyInput]}
+          placeholder="Enter your email"
+          value={email}
+          editable={false}
+        />
+
+        {message ? (
+          <Text style={{ textAlign: 'center', color: loading ? 'blue' : 'green', marginVertical: 10 }}>
+            {message}
+          </Text>
+        ) : null}
+
+        <TouchableOpacity
+          onPress={handleSubmit}
+          style={[styles.button, loading && { backgroundColor: '#cccccc' }]}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>
+            {loading ? 'Updating...' : 'Update Profile'}
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -139,61 +152,70 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingTop: 10,
   },
-  buttonIcon: {
-    margin: 10,
+  backIcon: {
+    marginBottom: 20,
   },
-  text: {
+  headerText: {
     fontSize: 24,
     fontWeight: 'bold',
-    margin: 10,
+    textAlign: 'center',
     color: 'black',
+    marginBottom: 20,
   },
   profileImageContainer: {
-    alignItems: 'center',
-    marginVertical: 20,
+    alignSelf: 'center',
+    marginTop: 20,
     width: 100,
     height: 100,
     backgroundColor: '#F1F1F1',
     borderRadius: 50,
-    justifyContent: 'center',
-    marginLeft: '35%',
+    justifyContent: "center",
+    alignItems: 'center',
+    borderColor: '#ccc',
+    position: 'relative',
   },
-  accountInfo: {
+  editIcon: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: '#E3E3E3',
+    padding: 5,
+    borderRadius: 20,
+    borderColor: '#ccc',
+  },
+  sectionHeader: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginLeft: '7%',
-    marginVertical: 10,
+    marginVertical: 20,
+    textAlign: 'center',
   },
-  formInput: {
-    fontSize: 16,
-    marginLeft: '7%',
-    marginVertical: 5,
+  label: {
+    fontSize: 14,
+    marginBottom: 5,
   },
   textInput: {
-    marginLeft: '7%',
+    borderWidth: 0,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
+    fontSize: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    paddingVertical: 5,
-  },
-  line: {
-    height: 1,
-    backgroundColor: '#ccc',
-    marginHorizontal: '7%',
-    marginVertical: 10,
   },
   button: {
     marginTop: 20,
-    marginLeft: '7%',
-    backgroundColor: '#1E90FF',
+    backgroundColor: '#1E3455',
     paddingVertical: 12,
-    paddingHorizontal: 20,
     borderRadius: 5,
+    alignItems: 'center',
   },
   buttonText: {
-    fontSize: 16,
     color: 'white',
-    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

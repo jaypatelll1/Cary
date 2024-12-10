@@ -30,11 +30,13 @@ export default function Profile() {
           style: "destructive",
           onPress: async () => {
             try {
-              await AsyncStorage.removeItem("userToken"); // Clear token if stored in AsyncStorage
-              dispatch(logout()); // Reset user state in Redux
+              await AsyncStorage.removeItem("userToken"); 
+              await AsyncStorage.removeItem("name");
+              await AsyncStorage.removeItem("email");
+              dispatch(logout()); 
               navigation.reset({
                 index: 0,
-                routes: [{ name: "Login" }], // Navigate to Login screen
+                routes: [{ name: "Login" }],
               });
             } catch (error) {
               console.error("Error during logout:", error);

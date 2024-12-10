@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,6 +9,25 @@ export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('authToken');
+        const name = await AsyncStorage.getItem('name');
+        const email = await AsyncStorage.getItem('email');
+
+        if (token && name && email) {
+          dispatch(setUser({ email, name, token }));
+          navigation.navigate('UserHome');
+        }
+      } catch (error) {
+        console.error('Error checking token:', error);
+      }
+    };
+
+    checkToken();
+  }, [navigation, dispatch]);
 
   const handleSignup = () => {
     navigation.navigate('SignUp');
@@ -26,14 +45,12 @@ export default function Login({ navigation }) {
       const response = await axios.post('https://cary-backend.onrender.com/api/auth/login', user);
       const { token, u: userData } = response.data;
 
-      // Dispatch user data to Redux store
       dispatch(setUser({
         email: userData.email,
         name: userData.name,
         token,
       }));
 
-      // Store user data in AsyncStorage
       await AsyncStorage.setItem('userId', userData.userid);
       await AsyncStorage.setItem('email', userData.email);
       await AsyncStorage.setItem('name', userData.name);
