@@ -9,7 +9,7 @@ import Home from '../Screens/UserScreens/Home';
 import Main from '../Screens/UserScreens/Main';
 import DrawerContent from '../DrawerContent';
 import Landing from '../Screens/Landing';
-import planurride from '../Screens/UserScreens/Planurrude';
+import EditProfile from '../Screens/UserScreens/EditProfile';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -18,10 +18,11 @@ const StackNav = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       {/* <Stack.Screen name="planurride" component={planurride} /> */}
       <Stack.Screen name="Landing" component={Landing} />
+      <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="UserHome" component={Home} />
       <Stack.Screen name="Profile" component={Profile} />
-      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="Main" component={Main} />
 
       

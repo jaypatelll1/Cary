@@ -1,45 +1,45 @@
-import { StyleSheet, Text, View, ScrollView, TextInput } from "react-native";
+import { StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity } from "react-native";
 import Icon1 from "react-native-vector-icons/AntDesign";
 import React from "react";
-import globalStyles from '../../globalStyles';
+import { useNavigation } from "@react-navigation/native";
 
 const EditProfile = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.mainContainer}>
       <ScrollView>
         <View>
-          <View>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <Icon1
               name="arrowleft"
               color="black"
               size={30}
               style={styles.buttonIcon}
             />
-          </View>
+          </TouchableOpacity>
           <View>
-            <Text style={[globalStyles.text]}>Account Info</Text>
+            <Text style={styles.text}>Account Info</Text>
           </View>
-          <View>
-            <View style={styles.profileImageContainer}>
-              <Icon1 name="user" color="gray" size={70} />
-            </View>
+          <View style={styles.profileImageContainer}>
+            <Icon1 name="user" color="gray" size={70} />
           </View>
           <View>
             <Text style={styles.accountInfo}>Basic Details</Text>
           </View>
           <View>
             <Text style={styles.formInput}>Name</Text>
-            <TextInput placeholder="Dev Pandhi" style={{ marginLeft: "7%"}}></TextInput>
+            <TextInput placeholder="Dev Pandhi" style={styles.textInput} />
             <View style={styles.line} />
           </View>
           <View>
             <Text style={styles.formInput}>Phone Number</Text>
-            <TextInput placeholder="7045999817" style={{ marginLeft: "7%",}}></TextInput>
+            <TextInput placeholder="7045999817" style={styles.textInput} />
             <View style={styles.line} />
           </View>
           <View>
             <Text style={styles.formInput}>Email</Text>
-            <TextInput placeholder="devpandhi1@gmail.com" style={{ marginLeft: "7%"}}></TextInput>
+            <TextInput placeholder="devpandhi1@gmail.com" style={styles.textInput} />
             <View style={styles.line} />
           </View>
         </View>
@@ -48,65 +48,46 @@ const EditProfile = () => {
   );
 };
 
-export default EditProfile;
-
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
-    height: "100%",
-  },
-  accountInfo: {
-    marginLeft: "8%",
-    fontWeight: "bold",
-    fontSize: 20,
-    marginBottom: 20,
+    backgroundColor: '#fff',
   },
   buttonIcon: {
-    marginTop: 50,
-    marginBottom: 10,
-    marginLeft: "5%",
+    margin: 10,
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    margin: 10,
   },
   profileImageContainer: {
-    borderRadius: 100,
-    backgroundColor: "#F1F1F1",
-    width: 104,
-    height: 104,
-    justifyContent: "left",
-    marginLeft: "8%",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 10,
+    alignItems: 'center',
+    marginVertical: 20,
   },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  input: {
-    backgroundColor: "#F3F3F3",
-    borderRadius: 5,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    marginBottom: 10,
-    marginTop: 10,
-  },
-  formContainer: {
-    paddingHorizontal: 20,
-    marginTop: 20,
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    height: "100%",
-  },
-  line: {
-    borderBottomColor: "#CBCBCB",
-    borderBottomWidth: 1,
-    marginLeft: "7%",
-    marginRight: "7%",
-    marginBottom: "3%"
+  accountInfo: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: '7%',
+    marginVertical: 10,
   },
   formInput: {
-    marginLeft: "7%",
-    marginBottom: "3%",
-    marginTop: "3%"
-}
+    fontSize: 16,
+    marginLeft: '7%',
+    marginVertical: 5,
+  },
+  textInput: {
+    marginLeft: '7%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingVertical: 5,
+  },
+  line: {
+    height: 1,
+    backgroundColor: '#ccc',
+    marginHorizontal: '7%',
+    marginVertical: 10,
+  },
 });
+
+export default EditProfile;

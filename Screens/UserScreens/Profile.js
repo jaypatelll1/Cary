@@ -10,7 +10,7 @@ import {
 import Icon1 from "react-native-vector-icons/AntDesign";
 import Icon2 from "react-native-vector-icons/Feather";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../redux/userSlice"; 
+import { logout } from "../../redux/userSlice"; 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 
@@ -55,7 +55,9 @@ export default function Profile() {
               <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Icon1 name="arrowleft" color="black" size={30} style={styles.buttonIcon} />
               </TouchableOpacity>
-              <Text style={styles.editProfileText}>Edit Profile</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
+                <Text style={styles.editProfileText}>Edit Profile</Text>
+              </TouchableOpacity>
             </View>
             {/* Profile Info */}
             <View style={styles.profileImageContainer}></View>
